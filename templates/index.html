@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚗 Mileage Tracker</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚗 Mileage Tracker</h1>
+            <p class="subtitle">Track your vehicles, fuel efficiency, and maintenance</p>
+            <div id="dashboard-stats" class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-vehicles">0</div>
+                    <div class="stat-label">Vehicles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-mileage">0 mi</div>
+                    <div class="stat-label">Total Mileage</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-fuel-cost">$0</div>
+                    <div class="stat-label">Fuel Cost</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avg-mpg">0 mpg</div>
+                    <div class="stat-label">Avg MPG</div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="tabs">
+                <button class="tab-button active" onclick="showTab('vehicles')">Vehicles</button>
+                <button class="tab-button" onclick="showTab('fillups')">Fill-ups</button>
+                <button class="tab-button" onclick="showTab('maintenance')">Maintenance</button>
+                <button class="tab-button" onclick="showTab('trips')">Trips</button>
+            </div>
+
+            <!-- Vehicles Tab -->
+            <div id="vehicles-tab" class="tab-content active">
+                <div class="section-header">
+                    <h2>🚙 Vehicles</h2>
+                    <button id="add-vehicle-btn" class="primary-btn">Add Vehicle</button>
+                </div>
+
+                <div id="vehicle-form" class="form-container hidden">
+                    <form id="create-vehicle-form">
+                        <h3>Add New Vehicle</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="vehicle-name">Vehicle Name *</label>
+                                <input type="text" id="vehicle-name" placeholder="e.g., Toyota Camry" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="vehicle-year">Year</label>
+                                <input type="number" id="vehicle-year" placeholder="2020" min="1900" max="2030">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="vehicle-make">Make *</label>
+                                <input type="text" id="vehicle-make" placeholder="Toyota" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="vehicle-model">Model *</label>
+                                <input type="text" id="vehicle-model" placeholder="Camry" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fuel-type">Fuel Type</label>
+                                <select id="fuel-type">
+                                    <option value="gasoline">Gasoline</option>
+                                    <option value="diesel">Diesel</option>
+                                    <option value="electric">Electric</option>
+                                    <option value="hybrid">Hybrid</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="tank-capacity">Tank Capacity (gal)</label>
+                                <input type="number" id="tank-capacity" step="0.1" placeholder="12.5">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="license-plate">License Plate</label>
+                                <input type="text" id="license-plate" placeholder="ABC-123">
+                            </div>
+                            <div class="form-group">
+                                <label for="vin">VIN</label>
+                                <input type="text" id="vin" placeholder="17-character VIN" maxlength="17">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="vehicle-notes">Notes</label>
+                            <textarea id="vehicle-notes" rows="2" placeholder="Any additional notes..."></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="primary-btn">Add Vehicle</button>
+                            <button type="button" onclick="hideVehicleForm()" class="secondary-btn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="vehicles-container" class="list-container">
+                    <div id="vehicles-loading" class="loading">Loading vehicles...</div>
+                    <div id="vehicles-empty" class="empty-state hidden">
+                        <p>No vehicles yet. Add your first vehicle above!</p>
+                    </div>
+                    <div id="vehicles-list" class="vehicles-grid hidden">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fill-ups Tab -->
+            <div id="fillups-tab" class="tab-content">
+                <div class="section-header">
+                    <h2>⛽ Fill-ups</h2>
+                    <button id="add-fillup-btn" class="primary-btn">Add Fill-up</button>
+                </div>
+
+                <div id="fillup-form" class="form-container hidden">
+                    <form id="create-fillup-form">
+                        <h3>Add Fill-up Record</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fillup-vehicle">Vehicle *</label>
+                                <select id="fillup-vehicle" required>
+                                    <option value="">Select vehicle...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="fillup-mileage">Mileage *</label>
+                                <input type="number" id="fillup-mileage" step="0.1" placeholder="123456.7" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fillup-gallons">Gallons *</label>
+                                <input type="number" id="fillup-gallons" step="0.01" placeholder="10.5" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="fillup-price">Price per Gallon *</label>
+                                <input type="number" id="fillup-price" step="0.001" placeholder="3.459" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fillup-date">Date</label>
+                                <input type="datetime-local" id="fillup-date">
+                            </div>
+                            <div class="form-group">
+                                <label for="fillup-location">Location</label>
+                                <input type="text" id="fillup-location" placeholder="Station name/address">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fuel-brand">Fuel Brand</label>
+                                <input type="text" id="fuel-brand" placeholder="Shell, Chevron, etc.">
+                            </div>
+                            <div class="form-group">
+                                <label for="full-tank">
+                                    <input type="checkbox" id="full-tank" checked> Full tank
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="fillup-notes">Notes</label>
+                            <textarea id="fillup-notes" rows="2" placeholder="Any notes about this fill-up..."></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="primary-btn">Add Fill-up</button>
+                            <button type="button" onclick="hideFillupForm()" class="secondary-btn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="fillups-container" class="list-container">
+                    <div id="fillups-loading" class="loading">Loading fill-ups...</div>
+                    <div id="fillups-empty" class="empty-state hidden">
+                        <p>No fill-ups recorded yet. Add your first fill-up above!</p>
+                    </div>
+                    <div id="fillups-list" class="fillups-list hidden">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Maintenance Tab -->
+            <div id="maintenance-tab" class="tab-content">
+                <div class="section-header">
+                    <h2>🔧 Maintenance</h2>
+                    <button id="add-maintenance-btn" class="primary-btn">Add Record</button>
+                </div>
+
+                <div id="maintenance-form" class="form-container hidden">
+                    <form id="create-maintenance-form">
+                        <h3>Add Maintenance Record</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="maintenance-vehicle">Vehicle *</label>
+                                <select id="maintenance-vehicle" required>
+                                    <option value="">Select vehicle...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="maintenance-mileage">Mileage *</label>
+                                <input type="number" id="maintenance-mileage" step="0.1" placeholder="123456.7" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="service-type">Service Type *</label>
+                                <select id="service-type" required>
+                                    <option value="">Select service...</option>
+                                    <option value="oil_change">Oil Change</option>
+                                    <option value="tire_rotation">Tire Rotation</option>
+                                    <option value="brake_service">Brake Service</option>
+                                    <option value="transmission">Transmission</option>
+                                    <option value="cooling_system">Cooling System</option>
+                                    <option value="battery">Battery</option>
+                                    <option value="inspection">Inspection</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="service-cost">Cost</label>
+                                <input type="number" id="service-cost" step="0.01" placeholder="0.00">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="service-date">Date</label>
+                                <input type="datetime-local" id="service-date">
+                            </div>
+                            <div class="form-group">
+                                <label for="service-provider">Provider</label>
+                                <input type="text" id="service-provider" placeholder="Shop name">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="next-service-mileage">Next Service (miles)</label>
+                                <input type="number" id="next-service-mileage" placeholder="15000">
+                            </div>
+                            <div class="form-group">
+                                <label for="next-service-date">Next Service (date)</label>
+                                <input type="date" id="next-service-date">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="maintenance-description">Description *</label>
+                            <textarea id="maintenance-description" rows="2" placeholder="Describe the service performed..." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="maintenance-notes">Notes</label>
+                            <textarea id="maintenance-notes" rows="2" placeholder="Additional notes..."></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="primary-btn">Add Record</button>
+                            <button type="button" onclick="hideMaintenanceForm()" class="secondary-btn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="maintenance-container" class="list-container">
+                    <div id="maintenance-loading" class="loading">Loading maintenance records...</div>
+                    <div id="maintenance-empty" class="empty-state hidden">
+                        <p>No maintenance records yet. Add your first record above!</p>
+                    </div>
+                    <div id="maintenance-list" class="maintenance-list hidden">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trips Tab -->
+            <div id="trips-tab" class="tab-content">
+                <div class="section-header">
+                    <h2>🛣️ Trips</h2>
+                    <button id="start-trip-btn" class="primary-btn">Start Trip</button>
+                </div>
+
+                <div id="trip-form" class="form-container hidden">
+                    <form id="create-trip-form">
+                        <h3>Start New Trip</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="trip-vehicle">Vehicle *</label>
+                                <select id="trip-vehicle" required>
+                                    <option value="">Select vehicle...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="start-mileage">Start Mileage *</label>
+                                <input type="number" id="start-mileage" step="0.1" placeholder="123456.7" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="trip-purpose">Purpose</label>
+                                <select id="trip-purpose">
+                                    <option value="personal">Personal</option>
+                                    <option value="business">Business</option>
+                                    <option value="commute">Commute</option>
+                                    <option value="vacation">Vacation</option>
+                                    <option value="errand">Errand</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="start-location">Start Location</label>
+                                <input type="text" id="start-location" placeholder="Home, Office, etc.">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="trip-notes">Notes</label>
+                            <textarea id="trip-notes" rows="2" placeholder="Trip purpose or notes..."></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="primary-btn">Start Trip</button>
+                            <button type="button" onclick="hideTripForm()" class="secondary-btn">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="active-trip" class="active-trip hidden">
+                    <div class="trip-info">
+                        <h3 id="active-trip-title"></h3>
+                        <div class="trip-details">
+                            <span id="active-vehicle-name"></span> |
+                            Started: <span id="active-start-time"></span> |
+                            <span id="active-start-mileage"></span> mi
+                        </div>
+                        <button id="complete-trip-btn" class="primary-btn">Complete Trip</button>
+                    </div>
+                </div>
+
+                <div id="trips-container" class="list-container">
+                    <div id="trips-loading" class="loading">Loading trips...</div>
+                    <div id="trips-empty" class="empty-state hidden">
+                        <p>No trips recorded yet. Start your first trip above!</p>
+                    </div>
+                    <div id="trips-list" class="trips-list hidden">
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="trip-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Complete Trip</h3>
+                <button onclick="closeTripModal()" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="complete-trip-form">
+                    <div class="form-group">
+                        <label for="end-mileage">End Mileage *</label>
+                        <input type="number" id="end-mileage" step="0.1" placeholder="123500.2" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="end-location">End Location</label>
+                        <input type="text" id="end-location" placeholder="Destination">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="primary-btn">Complete Trip</button>
+                        <button type="button" onclick="closeTripModal()" class="secondary-btn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
