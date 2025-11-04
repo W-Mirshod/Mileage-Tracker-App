@@ -17,10 +17,23 @@ const avgMpgEl = document.getElementById('avg-mpg');
 // Utility functions
 function showTab(tabName) {
     // Update tab buttons
-    tabs.forEach(tab => {
-        tab.classList.remove('active');
-        if (tab.textContent.toLowerCase().includes(tabName)) {
-            tab.classList.add('active');
+    tabs.forEach(tabButton => {
+        tabButton.classList.remove('active');
+        const tabText = tabButton.textContent.toLowerCase().trim();
+        const onclickAttr = tabButton.getAttribute('onclick');
+        
+        // Check if this button's onclick matches the tabName
+        if (onclickAttr && onclickAttr.includes(`'${tabName}'`)) {
+            tabButton.classList.add('active');
+        } else {
+            // Fallback: match by text content
+            const tabNameLower = tabName.toLowerCase();
+            if ((tabNameLower === 'fillups' && (tabText.includes('fill-up') || tabText.includes('fillups'))) ||
+                (tabNameLower === 'vehicles' && tabText.includes('vehicle')) ||
+                (tabNameLower === 'maintenance' && tabText.includes('maintenance')) ||
+                (tabNameLower === 'trips' && tabText.includes('trip'))) {
+                tabButton.classList.add('active');
+            }
         }
     });
 
@@ -28,7 +41,10 @@ function showTab(tabName) {
     tabContents.forEach(content => {
         content.classList.remove('active');
     });
-    document.getElementById(`${tabName}-tab`).classList.add('active');
+    const tabContent = document.getElementById(`${tabName}-tab`);
+    if (tabContent) {
+        tabContent.classList.add('active');
+    }
 }
 
 function showMessage(message, type = 'success') {
@@ -119,14 +135,23 @@ async function loadDashboardStats() {
 
 // Vehicle functions
 function showVehicleForm() {
-    showElement(document.getElementById('vehicle-form'));
-    document.getElementById('add-vehicle-btn').classList.add('hidden');
+    const form = document.getElementById('vehicle-form');
+    const button = document.getElementById('add-vehicle-btn');
+    if (form && button) {
+        showElement(form);
+        button.classList.add('hidden');
+    }
 }
 
 function hideVehicleForm() {
-    hideElement(document.getElementById('vehicle-form'));
-    document.getElementById('add-vehicle-btn').classList.remove('hidden');
-    document.getElementById('create-vehicle-form').reset();
+    const form = document.getElementById('vehicle-form');
+    const button = document.getElementById('add-vehicle-btn');
+    const formElement = document.getElementById('create-vehicle-form');
+    if (form && button) {
+        hideElement(form);
+        button.classList.remove('hidden');
+        if (formElement) formElement.reset();
+    }
 }
 
 async function createVehicle(event) {
@@ -306,15 +331,24 @@ async function deleteVehicle(vehicleId) {
 
 // Fillup functions
 function showFillupForm() {
-    loadVehiclesForSelect('fillup-vehicle');
-    showElement(document.getElementById('fillup-form'));
-    document.getElementById('add-fillup-btn').classList.add('hidden');
+    const form = document.getElementById('fillup-form');
+    const button = document.getElementById('add-fillup-btn');
+    if (form && button) {
+        loadVehiclesForSelect('fillup-vehicle');
+        showElement(form);
+        button.classList.add('hidden');
+    }
 }
 
 function hideFillupForm() {
-    hideElement(document.getElementById('fillup-form'));
-    document.getElementById('add-fillup-btn').classList.remove('hidden');
-    document.getElementById('create-fillup-form').reset();
+    const form = document.getElementById('fillup-form');
+    const button = document.getElementById('add-fillup-btn');
+    const formElement = document.getElementById('create-fillup-form');
+    if (form && button) {
+        hideElement(form);
+        button.classList.remove('hidden');
+        if (formElement) formElement.reset();
+    }
 }
 
 async function createFillup(event) {
@@ -470,15 +504,24 @@ async function deleteFillup(fillupId) {
 
 // Maintenance functions
 function showMaintenanceForm() {
-    loadVehiclesForSelect('maintenance-vehicle');
-    showElement(document.getElementById('maintenance-form'));
-    document.getElementById('add-maintenance-btn').classList.add('hidden');
+    const form = document.getElementById('maintenance-form');
+    const button = document.getElementById('add-maintenance-btn');
+    if (form && button) {
+        loadVehiclesForSelect('maintenance-vehicle');
+        showElement(form);
+        button.classList.add('hidden');
+    }
 }
 
 function hideMaintenanceForm() {
-    hideElement(document.getElementById('maintenance-form'));
-    document.getElementById('add-maintenance-btn').classList.remove('hidden');
-    document.getElementById('create-maintenance-form').reset();
+    const form = document.getElementById('maintenance-form');
+    const button = document.getElementById('add-maintenance-btn');
+    const formElement = document.getElementById('create-maintenance-form');
+    if (form && button) {
+        hideElement(form);
+        button.classList.remove('hidden');
+        if (formElement) formElement.reset();
+    }
 }
 
 async function createMaintenance(event) {
@@ -641,15 +684,24 @@ async function deleteMaintenance(recordId) {
 
 // Trip functions
 function showTripForm() {
-    loadVehiclesForSelect('trip-vehicle');
-    showElement(document.getElementById('trip-form'));
-    document.getElementById('start-trip-btn').classList.add('hidden');
+    const form = document.getElementById('trip-form');
+    const button = document.getElementById('start-trip-btn');
+    if (form && button) {
+        loadVehiclesForSelect('trip-vehicle');
+        showElement(form);
+        button.classList.add('hidden');
+    }
 }
 
 function hideTripForm() {
-    hideElement(document.getElementById('trip-form'));
-    document.getElementById('start-trip-btn').classList.remove('hidden');
-    document.getElementById('create-trip-form').reset();
+    const form = document.getElementById('trip-form');
+    const button = document.getElementById('start-trip-btn');
+    const formElement = document.getElementById('create-trip-form');
+    if (form && button) {
+        hideElement(form);
+        button.classList.remove('hidden');
+        if (formElement) formElement.reset();
+    }
 }
 
 async function createTrip(event) {
@@ -917,22 +969,41 @@ async function loadVehiclesForSelect(selectId) {
     }
 }
 
-// Event listeners
-document.getElementById('create-vehicle-form').addEventListener('submit', createVehicle);
-document.getElementById('create-fillup-form').addEventListener('submit', createFillup);
-document.getElementById('create-maintenance-form').addEventListener('submit', createMaintenance);
-document.getElementById('create-trip-form').addEventListener('submit', createTrip);
-document.getElementById('complete-trip-form').addEventListener('submit', completeTrip);
+// Setup event listeners
+function setupEventListeners() {
+    // Form submit listeners
+    const vehicleForm = document.getElementById('create-vehicle-form');
+    const fillupForm = document.getElementById('create-fillup-form');
+    const maintenanceForm = document.getElementById('create-maintenance-form');
+    const tripForm = document.getElementById('create-trip-form');
+    const completeTripForm = document.getElementById('complete-trip-form');
 
-// Button click listeners
-document.getElementById('add-vehicle-btn').addEventListener('click', showVehicleForm);
-document.getElementById('add-fillup-btn').addEventListener('click', showFillupForm);
-document.getElementById('add-maintenance-btn').addEventListener('click', showMaintenanceForm);
-document.getElementById('start-trip-btn').addEventListener('click', showTripForm);
-document.getElementById('complete-trip-btn').addEventListener('click', showCompleteTripModal);
+    if (vehicleForm) vehicleForm.addEventListener('submit', createVehicle);
+    if (fillupForm) fillupForm.addEventListener('submit', createFillup);
+    if (maintenanceForm) maintenanceForm.addEventListener('submit', createMaintenance);
+    if (tripForm) tripForm.addEventListener('submit', createTrip);
+    if (completeTripForm) completeTripForm.addEventListener('submit', completeTrip);
+
+    // Button click listeners
+    const addVehicleBtn = document.getElementById('add-vehicle-btn');
+    const addFillupBtn = document.getElementById('add-fillup-btn');
+    const addMaintenanceBtn = document.getElementById('add-maintenance-btn');
+    const startTripBtn = document.getElementById('start-trip-btn');
+    const completeTripBtn = document.getElementById('complete-trip-btn');
+
+    if (addVehicleBtn) addVehicleBtn.addEventListener('click', showVehicleForm);
+    if (addFillupBtn) addFillupBtn.addEventListener('click', showFillupForm);
+    if (addMaintenanceBtn) addMaintenanceBtn.addEventListener('click', showMaintenanceForm);
+    if (startTripBtn) startTripBtn.addEventListener('click', showTripForm);
+    if (completeTripBtn) completeTripBtn.addEventListener('click', showCompleteTripModal);
+}
 
 // Initialize the app
 async function init() {
+    // Setup event listeners first
+    setupEventListeners();
+
+    // Load data
     await Promise.all([
         loadDashboardStats(),
         loadVehicles(),
@@ -945,5 +1016,18 @@ async function init() {
     showTab('vehicles');
 }
 
-// Start the app
-init();
+// Make functions globally accessible (used by onclick in HTML)
+window.showTab = showTab;
+window.hideVehicleForm = hideVehicleForm;
+window.hideFillupForm = hideFillupForm;
+window.hideMaintenanceForm = hideMaintenanceForm;
+window.hideTripForm = hideTripForm;
+window.closeTripModal = closeTripModal;
+
+// Start the app when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    // DOM is already loaded
+    init();
+}
