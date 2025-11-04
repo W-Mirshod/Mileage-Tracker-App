@@ -52,27 +52,27 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="vehicle-name">Vehicle Name *</label>
-                                <input type="text" id="vehicle-name" placeholder="e.g., Toyota Camry" required>
+                                <input type="text" id="vehicle-name" name="vehicle-name" placeholder="e.g., Toyota Camry" required>
                             </div>
                             <div class="form-group">
                                 <label for="vehicle-year">Year</label>
-                                <input type="number" id="vehicle-year" placeholder="2020" min="1900" max="2030">
+                                <input type="number" id="vehicle-year" name="vehicle-year" placeholder="2020" min="1900" max="2030">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="vehicle-make">Make *</label>
-                                <input type="text" id="vehicle-make" placeholder="Toyota" required>
+                                <input type="text" id="vehicle-make" name="vehicle-make" placeholder="Toyota" required>
                             </div>
                             <div class="form-group">
                                 <label for="vehicle-model">Model *</label>
-                                <input type="text" id="vehicle-model" placeholder="Camry" required>
+                                <input type="text" id="vehicle-model" name="vehicle-model" placeholder="Camry" required>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="fuel-type">Fuel Type</label>
-                                <select id="fuel-type">
+                                <select id="fuel-type" name="fuel-type">
                                     <option value="gasoline">Gasoline</option>
                                     <option value="diesel">Diesel</option>
                                     <option value="electric">Electric</option>
@@ -81,22 +81,22 @@
                             </div>
                             <div class="form-group">
                                 <label for="tank-capacity">Tank Capacity (gal)</label>
-                                <input type="number" id="tank-capacity" step="0.1" placeholder="12.5">
+                                <input type="number" id="tank-capacity" name="tank-capacity" step="0.1" placeholder="12.5">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="license-plate">License Plate</label>
-                                <input type="text" id="license-plate" placeholder="ABC-123">
+                                <input type="text" id="license-plate" name="license-plate" placeholder="ABC-123">
                             </div>
                             <div class="form-group">
                                 <label for="vin">VIN</label>
-                                <input type="text" id="vin" placeholder="17-character VIN" maxlength="17">
+                                <input type="text" id="vin" name="vin" placeholder="17-character VIN" maxlength="17">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="vehicle-notes">Notes</label>
-                            <textarea id="vehicle-notes" rows="2" placeholder="Any additional notes..."></textarea>
+                            <textarea id="vehicle-notes" name="vehicle-notes" rows="2" placeholder="Any additional notes..."></textarea>
                         </div>
                         <div class="form-actions">
                             <button type="submit" class="primary-btn">Add Vehicle</button>
@@ -128,49 +128,49 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="fillup-vehicle">Vehicle *</label>
-                                <select id="fillup-vehicle" required>
+                                <select id="fillup-vehicle" name="fillup-vehicle" required>
                                     <option value="">Select vehicle...</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="fillup-mileage">Mileage *</label>
-                                <input type="number" id="fillup-mileage" step="0.1" placeholder="123456.7" required>
+                                <input type="number" id="fillup-mileage" name="fillup-mileage" step="0.1" placeholder="123456.7" required>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="fillup-gallons">Gallons *</label>
-                                <input type="number" id="fillup-gallons" step="0.01" placeholder="10.5" required>
+                                <input type="number" id="fillup-gallons" name="fillup-gallons" step="0.01" placeholder="10.5" required>
                             </div>
                             <div class="form-group">
                                 <label for="fillup-price">Price per Gallon *</label>
-                                <input type="number" id="fillup-price" step="0.001" placeholder="3.459" required>
+                                <input type="number" id="fillup-price" name="fillup-price" step="0.001" placeholder="3.459" required>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="fillup-date">Date</label>
-                                <input type="datetime-local" id="fillup-date">
+                                <input type="datetime-local" id="fillup-date" name="fillup-date">
                             </div>
                             <div class="form-group">
                                 <label for="fillup-location">Location</label>
-                                <input type="text" id="fillup-location" placeholder="Station name/address">
+                                <input type="text" id="fillup-location" name="fillup-location" placeholder="Station name/address">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="fuel-brand">Fuel Brand</label>
-                                <input type="text" id="fuel-brand" placeholder="Shell, Chevron, etc.">
+                                <input type="text" id="fuel-brand" name="fuel-brand" placeholder="Shell, Chevron, etc.">
                             </div>
                             <div class="form-group">
                                 <label for="full-tank">
-                                    <input type="checkbox" id="full-tank" checked> Full tank
+                                    <input type="checkbox" id="full-tank" name="full-tank" checked> Full tank
                                 </label>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="fillup-notes">Notes</label>
-                            <textarea id="fillup-notes" rows="2" placeholder="Any notes about this fill-up..."></textarea>
+                            <textarea id="fillup-notes" name="fillup-notes" rows="2" placeholder="Any notes about this fill-up..."></textarea>
                         </div>
                         <div class="form-actions">
                             <button type="submit" class="primary-btn">Add Fill-up</button>
@@ -202,19 +202,19 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="maintenance-vehicle">Vehicle *</label>
-                                <select id="maintenance-vehicle" required>
+                                <select id="maintenance-vehicle" name="maintenance-vehicle" required>
                                     <option value="">Select vehicle...</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="maintenance-mileage">Mileage *</label>
-                                <input type="number" id="maintenance-mileage" step="0.1" placeholder="123456.7" required>
+                                <input type="number" id="maintenance-mileage" name="maintenance-mileage" step="0.1" placeholder="123456.7" required>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="service-type">Service Type *</label>
-                                <select id="service-type" required>
+                                <select id="service-type" name="service-type" required>
                                     <option value="">Select service...</option>
                                     <option value="oil_change">Oil Change</option>
                                     <option value="tire_rotation">Tire Rotation</option>
@@ -228,36 +228,36 @@
                             </div>
                             <div class="form-group">
                                 <label for="service-cost">Cost</label>
-                                <input type="number" id="service-cost" step="0.01" placeholder="0.00">
+                                <input type="number" id="service-cost" name="service-cost" step="0.01" placeholder="0.00">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="service-date">Date</label>
-                                <input type="datetime-local" id="service-date">
+                                <input type="datetime-local" id="service-date" name="service-date">
                             </div>
                             <div class="form-group">
                                 <label for="service-provider">Provider</label>
-                                <input type="text" id="service-provider" placeholder="Shop name">
+                                <input type="text" id="service-provider" name="service-provider" placeholder="Shop name">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="next-service-mileage">Next Service (miles)</label>
-                                <input type="number" id="next-service-mileage" placeholder="15000">
+                                <input type="number" id="next-service-mileage" name="next-service-mileage" placeholder="15000">
                             </div>
                             <div class="form-group">
                                 <label for="next-service-date">Next Service (date)</label>
-                                <input type="date" id="next-service-date">
+                                <input type="date" id="next-service-date" name="next-service-date">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="maintenance-description">Description *</label>
-                            <textarea id="maintenance-description" rows="2" placeholder="Describe the service performed..." required></textarea>
+                            <textarea id="maintenance-description" name="maintenance-description" rows="2" placeholder="Describe the service performed..." required></textarea>
                         </div>
                         <div class="form-group">
                             <label for="maintenance-notes">Notes</label>
-                            <textarea id="maintenance-notes" rows="2" placeholder="Additional notes..."></textarea>
+                            <textarea id="maintenance-notes" name="maintenance-notes" rows="2" placeholder="Additional notes..."></textarea>
                         </div>
                         <div class="form-actions">
                             <button type="submit" class="primary-btn">Add Record</button>
@@ -289,19 +289,19 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="trip-vehicle">Vehicle *</label>
-                                <select id="trip-vehicle" required>
+                                <select id="trip-vehicle" name="trip-vehicle" required>
                                     <option value="">Select vehicle...</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="start-mileage">Start Mileage *</label>
-                                <input type="number" id="start-mileage" step="0.1" placeholder="123456.7" required>
+                                <input type="number" id="start-mileage" name="start-mileage" step="0.1" placeholder="123456.7" required>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="trip-purpose">Purpose</label>
-                                <select id="trip-purpose">
+                                <select id="trip-purpose" name="trip-purpose">
                                     <option value="personal">Personal</option>
                                     <option value="business">Business</option>
                                     <option value="commute">Commute</option>
@@ -312,12 +312,12 @@
                             </div>
                             <div class="form-group">
                                 <label for="start-location">Start Location</label>
-                                <input type="text" id="start-location" placeholder="Home, Office, etc.">
+                                <input type="text" id="start-location" name="start-location" placeholder="Home, Office, etc.">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="trip-notes">Notes</label>
-                            <textarea id="trip-notes" rows="2" placeholder="Trip purpose or notes..."></textarea>
+                            <textarea id="trip-notes" name="trip-notes" rows="2" placeholder="Trip purpose or notes..."></textarea>
                         </div>
                         <div class="form-actions">
                             <button type="submit" class="primary-btn">Start Trip</button>
@@ -361,11 +361,11 @@
                 <form id="complete-trip-form">
                     <div class="form-group">
                         <label for="end-mileage">End Mileage *</label>
-                        <input type="number" id="end-mileage" step="0.1" placeholder="123500.2" required>
+                        <input type="number" id="end-mileage" name="end-mileage" step="0.1" placeholder="123500.2" required>
                     </div>
                     <div class="form-group">
                         <label for="end-location">End Location</label>
-                        <input type="text" id="end-location" placeholder="Destination">
+                        <input type="text" id="end-location" name="end-location" placeholder="Destination">
                     </div>
                     <div class="form-actions">
                         <button type="submit" class="primary-btn">Complete Trip</button>

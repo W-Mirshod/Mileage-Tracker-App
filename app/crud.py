@@ -18,6 +18,9 @@ def get_vehicles(db: Session, skip: int = 0, limit: int = 100):
 def get_vehicle_by_id(db: Session, vehicle_id: int):
     return db.query(models.Vehicle).filter(models.Vehicle.id == vehicle_id).first()
 
+def get_vehicle_by_name(db: Session, vehicle_name: str):
+    return db.query(models.Vehicle).filter(models.Vehicle.name == vehicle_name).first()
+
 def get_vehicle_with_details(db: Session, vehicle_id: int):
     return db.query(models.Vehicle).options(
         joinedload(models.Vehicle.fillups),
@@ -116,7 +119,12 @@ def create_trip(db: Session, trip: schemas.TripCreate):
     db.add(db_trip)
     db.commit()
     db.refresh(db_trip)
+    # Eagerly load vehicle relationship
+    db_trip = db.query(models.Trip).options(joinedload(models.Trip.vehicle)).filter(models.Trip.id == db_trip.id).first()
     return db_trip
+
+def get_trip_by_id(db: Session, trip_id: int):
+    return db.query(models.Trip).options(joinedload(models.Trip.vehicle)).filter(models.Trip.id == trip_id).first()
 
 def get_trips_by_vehicle(db: Session, vehicle_id: int, skip: int = 0, limit: int = 100):
     return db.query(models.Trip).filter(models.Trip.vehicle_id == vehicle_id).order_by(desc(models.Trip.start_date)).offset(skip).limit(limit).all()

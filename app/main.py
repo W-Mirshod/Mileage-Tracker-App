@@ -4,7 +4,7 @@ from fastapi.responses import HTMLResponse
 from starlette.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from typing import List
-from . import database, models, schemas, crud, utils
+from . import database, models, schemas, crud
 
 app = FastAPI(title="Mileage Tracker")
 
@@ -32,7 +32,7 @@ async def get_dashboard_stats(db: Session = Depends(database.get_db)):
 @app.post("/api/vehicles", response_model=schemas.Vehicle)
 async def create_vehicle(vehicle: schemas.VehicleCreate, db: Session = Depends(database.get_db)):
     """Create a new vehicle."""
-    db_vehicle = crud.get_vehicle_by_id(db, vehicle.name)
+    db_vehicle = crud.get_vehicle_by_name(db, vehicle.name)
     if db_vehicle:
         raise HTTPException(status_code=400, detail="Vehicle with this name already exists")
 
@@ -185,6 +185,14 @@ async def get_all_trips(skip: int = 0, limit: int = 100, db: Session = Depends(d
     trips = crud.get_all_trips(db, skip=skip, limit=limit)
     return {"trips": trips, "total": len(trips)}
 
+@app.get("/api/trips/{trip_id}", response_model=schemas.Trip)
+async def get_trip(trip_id: int, db: Session = Depends(database.get_db)):
+    """Get a specific trip."""
+    trip = crud.get_trip_by_id(db, trip_id)
+    if trip is None:
+        raise HTTPException(status_code=404, detail="Trip not found")
+    return trip
+
 @app.get("/api/vehicles/{vehicle_id}/trips", response_model=schemas.TripList)
 async def get_vehicle_trips(vehicle_id: int, skip: int = 0, limit: int = 100, db: Session = Depends(database.get_db)):
     """Get trips for a specific vehicle."""
@@ -197,9 +205,9 @@ async def get_vehicle_trips(vehicle_id: int, skip: int = 0, limit: int = 100, db
     return {"trips": trips, "total": len(trips)}
 
 @app.post("/api/trips/{trip_id}/complete")
-async def complete_trip(trip_id: int, end_mileage: float, end_location: str = None, db: Session = Depends(database.get_db)):
+async def complete_trip(trip_id: int, trip_data: schemas.TripComplete, db: Session = Depends(database.get_db)):
     """Complete a trip."""
-    trip = crud.complete_trip(db, trip_id, end_mileage, end_location)
+    trip = crud.complete_trip(db, trip_id, trip_data.end_mileage, trip_data.end_location)
     if trip is None:
         raise HTTPException(status_code=404, detail="Trip not found")
 

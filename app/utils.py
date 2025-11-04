@@ -4,11 +4,11 @@ from datetime import datetime
 
 def format_currency(amount: float) -> str:
     """Format amount as currency."""
-    return ".2f"
+    return f"${amount:.2f}"
 
 def format_mileage(mileage: float) -> str:
     """Format mileage with commas."""
-    return ".1f"
+    return f"{mileage:,.1f}"
 
 def calculate_fuel_efficiency(miles: float, gallons: float) -> float:
     """Calculate MPG (miles per gallon)."""

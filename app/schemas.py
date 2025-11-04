@@ -110,6 +110,10 @@ class TripList(BaseModel):
     trips: List[Trip]
     total: int
 
+class TripComplete(BaseModel):
+    end_mileage: float
+    end_location: Optional[str] = None
+
 class VehicleStats(BaseModel):
     vehicle_id: int
     vehicle_name: str

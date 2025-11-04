@@ -401,15 +401,15 @@ function displayFillups(fillups) {
         const fillupItem = document.createElement('div');
         fillupItem.className = 'fillup-item';
 
-        const mpg = fillup.gallons > 0 ? (fillup.mileage / fillup.gallons).toFixed(1) : 'N/A';
+        const mpg = 'N/A';
 
         fillupItem.innerHTML = `
             <div class="fillup-header">
                 <div>
-                    <div class="fillup-vehicle">${fillup.vehicle.name}</div>
+                    <div class="fillup-vehicle">${fillup.vehicle?.name || 'Unknown Vehicle'}</div>
                     <div class="fillup-date">${formatDateTime(fillup.date)}</div>
                 </div>
-                <div class="fillup-mpg">${mpg} mpg</div>
+                <div class="fillup-mpg">${mpg}</div>
             </div>
 
             <div class="fillup-details">
@@ -697,7 +697,8 @@ function startActiveTrip(trip) {
     const startTimeEl = document.getElementById('active-start-time');
     const startMileageEl = document.getElementById('active-start-mileage');
 
-    titleEl.textContent = `Trip: ${trip.purpose.charAt(0).toUpperCase() + trip.purpose.slice(1)}`;
+    const purposeText = trip.purpose ? trip.purpose.charAt(0).toUpperCase() + trip.purpose.slice(1) : 'Trip';
+    titleEl.textContent = `Trip: ${purposeText}`;
     vehicleEl.textContent = trip.vehicle?.name || 'Unknown Vehicle';
     startTimeEl.textContent = formatDateTime(trip.start_date);
     startMileageEl.textContent = formatMileage(trip.start_mileage);
@@ -726,14 +727,18 @@ async function completeTrip(event) {
     try {
         const response = await fetch(`${API_BASE}/api/trips/${activeTrip.id}/complete`, {
             method: 'POST',
-            body: new URLSearchParams({
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
                 end_mileage: endMileage,
-                end_location: endLocation || ''
+                end_location: endLocation
             }),
         });
 
         if (!response.ok) {
-            throw new Error('Failed to complete trip');
+            const error = await response.json();
+            throw new Error(error.detail || 'Failed to complete trip');
         }
 
         showMessage('Trip completed successfully!');
@@ -795,7 +800,7 @@ function displayTrips(trips) {
         tripItem.innerHTML = `
             <div class="trip-header">
                 <div>
-                    <div class="trip-purpose">${purposeIcon} ${trip.purpose.charAt(0).toUpperCase() + trip.purpose.slice(1)}</div>
+                    <div class="trip-purpose">${purposeIcon} ${trip.purpose ? trip.purpose.charAt(0).toUpperCase() + trip.purpose.slice(1) : 'Trip'}</div>
                     <div class="trip-vehicle">${trip.vehicle?.name || 'Unknown Vehicle'}</div>
                 </div>
                 <div class="trip-status">
@@ -848,10 +853,20 @@ function displayTrips(trips) {
     showElement(list);
 }
 
-function completeTripFromList(tripId) {
-    // Find trip in current trips and set as active
-    // This is a simplified version - in a real app you'd fetch the trip details
-    showCompleteTripModal();
+async function completeTripFromList(tripId) {
+    try {
+        const response = await fetch(`${API_BASE}/api/trips/${tripId}`);
+        if (response.ok) {
+            const trip = await response.json();
+            activeTrip = trip;
+            showCompleteTripModal();
+        } else {
+            showMessage('Failed to load trip details', 'error');
+        }
+    } catch (error) {
+        showMessage('Failed to load trip details', 'error');
+        console.error('Error loading trip:', error);
+    }
 }
 
 async function deleteTrip(tripId) {
@@ -908,6 +923,13 @@ document.getElementById('create-fillup-form').addEventListener('submit', createF
 document.getElementById('create-maintenance-form').addEventListener('submit', createMaintenance);
 document.getElementById('create-trip-form').addEventListener('submit', createTrip);
 document.getElementById('complete-trip-form').addEventListener('submit', completeTrip);
+
+// Button click listeners
+document.getElementById('add-vehicle-btn').addEventListener('click', showVehicleForm);
+document.getElementById('add-fillup-btn').addEventListener('click', showFillupForm);
+document.getElementById('add-maintenance-btn').addEventListener('click', showMaintenanceForm);
+document.getElementById('start-trip-btn').addEventListener('click', showTripForm);
+document.getElementById('complete-trip-btn').addEventListener('click', showCompleteTripModal);
 
 // Initialize the app
 async function init() {
